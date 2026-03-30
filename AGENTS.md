@@ -40,6 +40,7 @@ discovery, sync-back, ignore management, and safe apply flows.
 - Mutating commands stay preview-first unless `--write` is passed.
 - Agent-facing commands expose `--json` where the result is useful for tooling.
 - version intent lives in `.changeset/` and must be kept in sync with release docs
+- npm publishing uses trusted publishers via GitHub OIDC, not `NPM_TOKEN`
 
 ## When changing behavior
 

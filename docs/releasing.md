@@ -2,11 +2,26 @@
 
 ## Release requirements
 
-- `NPM_TOKEN` GitHub Actions secret with publish access
+- npm trusted publisher configured for `KitsuneKode/loom-cli`
 - package version already bumped in `package.json`
 - `bun.lock` committed
 - `bun run check` passing locally
 - no pending release markdown files left in `.changeset/`
+
+## Trusted publisher setup
+
+Configure the package on npm using the official trusted publishing flow:
+
+- provider: GitHub Actions
+- GitHub user or org: `KitsuneKode`
+- repository: `loom-cli`
+- workflow filename: `release.yml`
+
+Notes:
+
+- npm trusted publishing requires npm CLI `11.5.1+` and Node `22.14.0+`
+- GitHub-hosted runners are supported; self-hosted runners are not currently supported
+- the workflow in this repo uses Node `24` for the publish step to satisfy npm's requirement
 
 ## Day-to-day change flow
 
@@ -43,7 +58,7 @@ The workflow does:
 3. read package metadata and derive the release tag
 4. check whether the current version already exists on npm
 5. check whether the matching GitHub release already exists
-6. publish to npm when needed and `NPM_TOKEN` is configured
+6. publish to npm with trusted publishing when needed
 7. create the GitHub release when the package is published and the release does not yet exist
 
 ## Recommended release sequence

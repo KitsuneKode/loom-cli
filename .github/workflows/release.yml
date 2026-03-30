@@ -74,8 +74,6 @@ jobs:
 
       - name: Plan release actions
         id: plan
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           pending="${{ steps.changesets.outputs.pending }}"
           published="${{ steps.npm.outputs.published }}"
@@ -84,23 +82,16 @@ jobs:
           if [ "$pending" = "true" ]; then
             echo "should_publish=false" >> "$GITHUB_OUTPUT"
             echo "should_release=false" >> "$GITHUB_OUTPUT"
-            echo "missing_token=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
-          if [ "$published" = "false" ] && [ -n "$NPM_TOKEN" ]; then
+          if [ "$published" = "false" ]; then
             echo "should_publish=true" >> "$GITHUB_OUTPUT"
           else
             echo "should_publish=false" >> "$GITHUB_OUTPUT"
           fi
 
-          if [ "$published" = "false" ] && [ -z "$NPM_TOKEN" ]; then
-            echo "missing_token=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "missing_token=false" >> "$GITHUB_OUTPUT"
-          fi
-
-          if [ "$release_exists" = "false" ] && { [ "$published" = "true" ] || [ -n "$NPM_TOKEN" ]; }; then
+          if [ "$release_exists" = "false" ]; then
             echo "should_release=true" >> "$GITHUB_OUTPUT"
           else
             echo "should_release=false" >> "$GITHUB_OUTPUT"
@@ -131,14 +122,15 @@ jobs:
             echo "- Run \`bun run version-packages\` and commit the versioned files before publishing"
           } >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Note missing NPM token
-        if: steps.plan.outputs.missing_token == 'true' && steps.changesets.outputs.pending != 'true'
+      - name: Note trusted publisher requirement
+        if: steps.changesets.outputs.pending != 'true' && steps.plan.outputs.should_publish == 'true'
         run: |
           {
-            echo "NPM_TOKEN is not configured."
+            echo "Trusted publishing is required for npm publish."
             echo
-            echo "- npm publish was skipped"
-            echo "- GitHub release creation was skipped until npm publishing is possible"
+            echo "- Configure npm trusted publishing for \`KitsuneKode/loom-cli\`"
+            echo "- Workflow filename must be \`release.yml\`"
+            echo "- GitHub-hosted runners are required"
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Verify release build
@@ -152,13 +144,11 @@ jobs:
         if: steps.plan.outputs.should_publish == 'true'
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
           registry-url: https://registry.npmjs.org
 
       - name: Publish to npm
         if: steps.plan.outputs.should_publish == 'true'
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npm publish --access public --provenance
 
       - name: Create GitHub release

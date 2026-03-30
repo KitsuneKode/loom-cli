@@ -88,15 +88,21 @@ bun run release:dry-run
 ```
 
 The automated publish flow lives in `/.github/workflows/release.yml`.
-It expects one secret:
+It is configured for npm trusted publishing with GitHub OIDC, not `NPM_TOKEN`.
 
-- `NPM_TOKEN`: npm automation token with publish access for `@kitsunekode/loom-cli`
+Before the first real publish, configure a trusted publisher on npm for:
+
+- GitHub user or org: `KitsuneKode`
+- Repository: `loom-cli`
+- Workflow filename: `release.yml`
 
 See `docs/releasing.md` for the full release checklist.
 
 Important:
 
 - pending changesets block the automated publish workflow
+- trusted publishing requires a GitHub-hosted runner and a matching npm trusted
+  publisher configuration
 - once versions are cut and no changesets are pending, the `main` branch release
   workflow can publish the new npm version
 
