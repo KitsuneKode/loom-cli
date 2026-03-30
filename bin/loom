@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SOURCE_PATH="${BASH_SOURCE[0]}"
+
+while [[ -L "$SOURCE_PATH" ]]; do
+    LINK_DIR="$(cd -P "$(dirname "$SOURCE_PATH")" && pwd)"
+    SOURCE_PATH="$(readlink "$SOURCE_PATH")"
+    [[ "$SOURCE_PATH" != /* ]] && SOURCE_PATH="$LINK_DIR/$SOURCE_PATH"
+done
+
+SCRIPT_DIR="$(cd -P "$(dirname "$SOURCE_PATH")" && pwd)"
+DIST_ENTRY="$SCRIPT_DIR/../dist/loom.js"
+SRC_ENTRY="$SCRIPT_DIR/../src/bin/loom.ts"
+
+if [[ -f "$DIST_ENTRY" ]]; then
+    exec bun "$DIST_ENTRY" "$@"
+fi
+
+exec bun "$SRC_ENTRY" "$@"
