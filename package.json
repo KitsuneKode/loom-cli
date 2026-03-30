@@ -45,6 +45,10 @@
     "build": "mkdir -p dist && bun build src/bin/loom.ts --outfile dist/loom.js --target bun --minify",
     "test": "bun test",
     "typecheck": "bunx tsc --noEmit",
+    "changeset": "changeset",
+    "changeset:status": "changeset status",
+    "version-packages": "changeset version && bun install",
+    "release": "changeset publish",
     "check": "bun run typecheck && bun test && bun run build",
     "pkg:check": "bun run build && npm pack --dry-run --ignore-scripts",
     "release:dry-run": "npm publish --dry-run --access public",
@@ -54,6 +58,7 @@
     "prepublishOnly": "bun run check"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.29.7",
     "@types/bun": "latest",
     "typescript": "^5.9.3"
   }

@@ -40,6 +40,18 @@ jobs:
           echo "version=$version" >> "$GITHUB_OUTPUT"
           echo "tag=v$version" >> "$GITHUB_OUTPUT"
 
+      - name: Check pending changesets
+        id: changesets
+        run: |
+          count=$(find .changeset -maxdepth 1 -name '*.md' ! -name 'README.md' | wc -l | tr -d ' ')
+          if [ "$count" -gt 0 ]; then
+            echo "pending=true" >> "$GITHUB_OUTPUT"
+            echo "count=$count" >> "$GITHUB_OUTPUT"
+          else
+            echo "pending=false" >> "$GITHUB_OUTPUT"
+            echo "count=0" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Check npm publish state
         id: npm
         run: |
@@ -65,8 +77,16 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
+          pending="${{ steps.changesets.outputs.pending }}"
           published="${{ steps.npm.outputs.published }}"
           release_exists="${{ steps.gh_release.outputs.exists }}"
+
+          if [ "$pending" = "true" ]; then
+            echo "should_publish=false" >> "$GITHUB_OUTPUT"
+            echo "should_release=false" >> "$GITHUB_OUTPUT"
+            echo "missing_token=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
 
           if [ "$published" = "false" ] && [ -n "$NPM_TOKEN" ]; then
             echo "should_publish=true" >> "$GITHUB_OUTPUT"
@@ -93,14 +113,26 @@ jobs:
             echo
             echo "- Version: \`${{ steps.package.outputs.version }}\`"
             echo "- Tag: \`${{ steps.package.outputs.tag }}\`"
+            echo "- Pending changesets: \`${{ steps.changesets.outputs.pending }}\`"
+            echo "- Pending changeset count: \`${{ steps.changesets.outputs.count }}\`"
             echo "- Already on npm: \`${{ steps.npm.outputs.published }}\`"
             echo "- GitHub release exists: \`${{ steps.gh_release.outputs.exists }}\`"
             echo "- Will publish to npm: \`${{ steps.plan.outputs.should_publish }}\`"
             echo "- Will create GitHub release: \`${{ steps.plan.outputs.should_release }}\`"
           } >> "$GITHUB_STEP_SUMMARY"
 
+      - name: Note pending changesets
+        if: steps.changesets.outputs.pending == 'true'
+        run: |
+          {
+            echo "Pending changesets were found."
+            echo
+            echo "- Publish was skipped"
+            echo "- Run \`bun run version-packages\` and commit the versioned files before publishing"
+          } >> "$GITHUB_STEP_SUMMARY"
+
       - name: Note missing NPM token
-        if: steps.plan.outputs.missing_token == 'true'
+        if: steps.plan.outputs.missing_token == 'true' && steps.changesets.outputs.pending != 'true'
         run: |
           {
             echo "NPM_TOKEN is not configured."
@@ -112,6 +144,7 @@ jobs:
       - name: Verify release build
         if: steps.plan.outputs.should_publish == 'true'
         run: |
+          bun run changeset:status
           bun run check
           bun run pkg:check
 

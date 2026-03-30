@@ -6,10 +6,22 @@
 - package version already bumped in `package.json`
 - `bun.lock` committed
 - `bun run check` passing locally
+- no pending release markdown files left in `.changeset/`
+
+## Day-to-day change flow
+
+For feature or fix work that should land in a release:
+
+```bash
+bun run changeset
+```
+
+Commit the generated `.changeset/*.md` file with the code change.
 
 ## Local preflight
 
 ```bash
+bun run changeset:status
 bun run check
 bun run pkg:check
 bun run release:dry-run
@@ -26,16 +38,19 @@ It can publish in two ways:
 
 The workflow does:
 
-1. read package metadata and derive the release tag
-2. check whether the current version already exists on npm
-3. check whether the matching GitHub release already exists
-4. publish to npm when needed and `NPM_TOKEN` is configured
-5. create the GitHub release when the package is published and the release does not yet exist
+1. check whether pending `.changeset/*.md` files still exist
+2. refuse to publish while release intent is still pending
+3. read package metadata and derive the release tag
+4. check whether the current version already exists on npm
+5. check whether the matching GitHub release already exists
+6. publish to npm when needed and `NPM_TOKEN` is configured
+7. create the GitHub release when the package is published and the release does not yet exist
 
 ## Recommended release sequence
 
-1. bump `package.json` version
-2. run local preflight
-3. commit and push
-4. push to `main`
-5. verify the workflow summary and package on npm
+1. run `bun run changeset` as part of feature work
+2. when ready to ship, run `bun run version-packages`
+3. review `package.json`, `bun.lock`, and removed/consumed changesets
+4. run local preflight
+5. commit and push to `main`
+6. verify the workflow summary and package on npm

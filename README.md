@@ -49,6 +49,27 @@ Optional global link:
 bun run link:global
 ```
 
+## Versioning with Changesets
+
+`loom-cli` uses [Changesets](https://github.com/changesets/changesets) for
+release intent and version bumps.
+
+Normal flow:
+
+```bash
+bun run changeset
+git add .changeset
+git commit -m "feat: ..."
+```
+
+When you're ready to cut a release version:
+
+```bash
+bun run version-packages
+git add package.json bun.lock .changeset
+git commit -m "chore: version packages"
+```
+
 ## Publish to npm
 
 The repo is ready for npm-style packaging:
@@ -60,6 +81,7 @@ The repo is ready for npm-style packaging:
 Before publishing:
 
 ```bash
+bun run changeset:status
 bun run check
 npm pack --dry-run --ignore-scripts
 bun run release:dry-run
@@ -71,6 +93,12 @@ It expects one secret:
 - `NPM_TOKEN`: npm automation token with publish access for `@kitsunekode/loom-cli`
 
 See `docs/releasing.md` for the full release checklist.
+
+Important:
+
+- pending changesets block the automated publish workflow
+- once versions are cut and no changesets are pending, the `main` branch release
+  workflow can publish the new npm version
 
 ## Quick start
 

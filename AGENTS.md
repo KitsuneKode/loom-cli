@@ -26,6 +26,9 @@ discovery, sync-back, ignore management, and safe apply flows.
 - `bun run build`
 - `bun run check`
 - `bun run pkg:check`
+- `bun run changeset`
+- `bun run changeset:status`
+- `bun run version-packages`
 - `bun run link:global`
 
 ## Repo contract
@@ -36,6 +39,7 @@ discovery, sync-back, ignore management, and safe apply flows.
 - `.loomignore` supports both repo-root and distributed subtree metadata.
 - Mutating commands stay preview-first unless `--write` is passed.
 - Agent-facing commands expose `--json` where the result is useful for tooling.
+- version intent lives in `.changeset/` and must be kept in sync with release docs
 
 ## When changing behavior
 
