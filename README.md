@@ -5,6 +5,13 @@ It keeps one repo as the source of truth, lets you keep editing live files, and
 helps you discover, inspect, track, ignore, sync back, and apply changes with
 explicit control.
 
+[![CI](https://github.com/KitsuneKode/loom-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/KitsuneKode/loom-cli/actions/workflows/ci.yml)
+[![npm package](https://img.shields.io/npm/v/%40kitsunekode%2Floom-cli)](https://www.npmjs.com/package/@kitsunekode/loom-cli)
+
+The npm package follows the same naming pattern as the other `cli-tools` repos:
+the package is `@kitsunekode/loom-cli`, while the installed executable stays
+`loom`.
+
 ## Why it exists
 
 `chezmoi` is excellent at rendering one source repo onto scattered files in
@@ -55,8 +62,15 @@ Before publishing:
 ```bash
 bun run check
 npm pack --dry-run --ignore-scripts
-npm publish
+bun run release:dry-run
 ```
+
+The automated publish flow lives in `/.github/workflows/release.yml`.
+It expects one secret:
+
+- `NPM_TOKEN`: npm automation token with publish access for `@kitsunekode/loom-cli`
+
+See `docs/releasing.md` for the full release checklist.
 
 ## Quick start
 

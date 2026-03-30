@@ -9,6 +9,7 @@ discovery, sync-back, ignore management, and safe apply flows.
 2. `docs/architecture.md`
 3. `docs/config-reference.md`
 4. `docs/workflow.md`
+5. `docs/releasing.md` when changing packaging or release behavior
 
 ## Key files
 
@@ -24,6 +25,7 @@ discovery, sync-back, ignore management, and safe apply flows.
 - `bun run typecheck`
 - `bun run build`
 - `bun run check`
+- `bun run pkg:check`
 - `bun run link:global`
 
 ## Repo contract

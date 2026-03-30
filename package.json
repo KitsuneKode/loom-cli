@@ -32,7 +32,7 @@
     "docs"
   ],
   "bin": {
-    "loom": "./bin/loom"
+    "loom": "bin/loom"
   },
   "engines": {
     "bun": ">=1.3.9"
@@ -47,6 +47,7 @@
     "typecheck": "bunx tsc --noEmit",
     "check": "bun run typecheck && bun test && bun run build",
     "pkg:check": "bun run build && npm pack --dry-run --ignore-scripts",
+    "release:dry-run": "npm publish --dry-run --access public",
     "link:global": "bun run build && bun link",
     "unlink:global": "bun unlink",
     "prepack": "bun run build",
