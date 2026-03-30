@@ -1,6 +1,6 @@
 # AGENTS
 
-`loom-cli` is a Bun-native wrapper around `chezmoi` for preview-first dotfiles
+`loom` is a Bun-native wrapper around `chezmoi` for preview-first dotfiles
 discovery, sync-back, ignore management, and safe apply flows.
 
 ## Read order

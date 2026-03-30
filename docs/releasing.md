@@ -2,7 +2,7 @@
 
 ## Release requirements
 
-- npm trusted publisher configured for `KitsuneKode/loom-cli`
+- npm trusted publisher configured for `KitsuneKode/loom-cli` repository
 - package version already bumped in `package.json`
 - `bun.lock` committed
 - `bun run check` passing locally

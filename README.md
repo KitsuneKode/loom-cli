@@ -1,4 +1,4 @@
-# loom-cli
+# loom
 
 `loom` is a preview-first dotfiles workflow CLI built on top of `chezmoi`.
 It keeps one repo as the source of truth, lets you keep editing live files, and
@@ -6,11 +6,9 @@ helps you discover, inspect, track, ignore, sync back, and apply changes with
 explicit control.
 
 [![CI](https://github.com/KitsuneKode/loom-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/KitsuneKode/loom-cli/actions/workflows/ci.yml)
-[![npm package](https://img.shields.io/npm/v/%40kitsunekode%2Floom-cli)](https://www.npmjs.com/package/@kitsunekode/loom-cli)
+[![npm package](https://img.shields.io/npm/v/%40kitsunekode%2Floom)](https://www.npmjs.com/package/@kitsunekode/loom)
 
-The npm package follows the same naming pattern as the other `cli-tools` repos:
-the package is `@kitsunekode/loom-cli`, while the installed executable stays
-`loom`.
+The npm package name is `@kitsunekode/loom`. The installed executable stays `loom`.
 
 ## Why it exists
 
@@ -51,7 +49,7 @@ bun run link:global
 
 ## Versioning with Changesets
 
-`loom-cli` uses [Changesets](https://github.com/changesets/changesets) for
+`loom` uses [Changesets](https://github.com/changesets/changesets) for
 release intent and version bumps.
 
 Normal flow:

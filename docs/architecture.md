@@ -2,7 +2,7 @@
 
 ## Runtime shape
 
-`loom-cli` is a Bun-native TypeScript CLI with a small explicit module graph:
+`loom` is a Bun-native TypeScript CLI with a small explicit module graph:
 
 - `src/cli.ts`: top-level routing and UX contract
 - `src/config.ts`: `.loom.toml` lookup, parsing, and path resolution
