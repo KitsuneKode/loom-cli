@@ -128,7 +128,7 @@ jobs:
           {
             echo "Trusted publishing is required for npm publish."
             echo
-            echo "- Configure npm trusted publishing for the GitHub repository"
+            echo "- Configure npm trusted publishing for the  \`KitsuneKode/loom-cli\ `"
             echo "- Workflow filename must be \`release.yml\`"
             echo "- GitHub-hosted runners are required"
           } >> "$GITHUB_STEP_SUMMARY"
